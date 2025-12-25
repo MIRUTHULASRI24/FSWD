@@ -1,0 +1,94 @@
+import { useState } from "react";
+
+function Feedback() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [feedbackList, setFeedbackList] = useState([]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFeedbackList([...feedbackList, formData]);
+    setFormData({ name: "", email: "", message: "" });
+  };
+
+  return (
+    <div>
+      <h2>Feedback Form</h2>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+
+        <br /><br />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+
+        <br /><br />
+
+        <textarea
+          name="message"
+          placeholder="Feedback"
+          value={formData.message}
+          onChange={handleChange}
+          required
+        />
+
+        <br /><br />
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <h3>Submitted Feedback</h3>
+
+      {feedbackList.map((item, index) => (
+        <div key={index}>
+          <p><strong>Name:</strong> {item.name}</p>
+          <p><strong>Email:</strong> {item.email}</p>
+          <p><strong>Message:</strong> {item.message}</p>
+          <hr />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+APP.JSX
+
+import Feedback from "./Feedback";
+
+function App() {
+  return (
+    <div>
+      <Feedback />
+    </div>
+  );
+}
+
+export default App;
+
+
+export default Feedback;
