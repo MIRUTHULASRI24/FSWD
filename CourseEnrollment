@@ -1,0 +1,84 @@
+import { useState } from "react";
+
+function CourseEnrollment() {
+  const [studentName, setStudentName] = useState("");
+  const [course, setCourse] = useState("");
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (studentName === "" || course === "") return;
+
+    setEnrolledCourses([
+      ...enrolledCourses,
+      { name: studentName, course: course }
+    ]);
+
+    setStudentName("");
+    setCourse("");
+  };
+
+  return (
+    <div>
+      <h2>Course Enrollment Form</h2>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Student Name"
+          value={studentName}
+          onChange={(e) => setStudentName(e.target.value)}
+        />
+
+        <br /><br />
+
+        <select
+          value={course}
+          onChange={(e) => setCourse(e.target.value)}
+        >
+          <option value="">Select Course</option>
+          <option value="React">React</option>
+          <option value="Node.js">Node.js</option>
+          <option value="MongoDB">MongoDB</option>
+          <option value="Java">Java</option>
+        </select>
+
+        <br /><br />
+
+        <button type="submit">Enroll</button>
+      </form>
+
+      <h3>Enrolled Students</h3>
+
+      {enrolledCourses.length === 0 && <p>No enrollments yet.</p>}
+
+      {enrolledCourses.map((item, index) => (
+        <div key={index}>
+          <p>
+            <strong>{item.name}</strong> enrolled in <strong>{item.course}</strong>
+          </p>
+          <hr />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+APP.JSX
+
+import CourseEnrollment from "./CourseEnrollment";
+
+function App() {
+  return (
+    <div>
+      <CourseEnrollment />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+export default CourseEnrollment;
