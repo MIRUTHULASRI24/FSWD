@@ -1,0 +1,114 @@
+import { useState, useEffect } from "react";
+
+function App() {
+  const [notifications, setNotifications] = useState([]);
+
+  const addNotification = (type, message) => {
+    const newNotification = {
+      id: Date.now(),
+      type,
+      message,
+    };
+
+    setNotifications((prev) => [...prev, newNotification]);
+
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      setNotifications((prev) =>
+        prev.filter((n) => n.id !== newNotification.id)
+      );
+    }, 3000);
+  };
+
+  return (
+    <div style={styles.container}>
+      <h2>Dashboard</h2>
+
+      {/* Action Buttons */}
+      <div style={styles.buttons}>
+        <button onClick={() => addNotification("success", "Data saved successfully!")}>
+          Success
+        </button>
+
+        <button onClick={() => addNotification("warning", "Please check your input!")}>
+          Warning
+        </button>
+
+        <button onClick={() => addNotification("error", "Something went wrong!")}>
+          Error
+        </button>
+      </div>
+
+      {/* Notification Panel */}
+      <div style={styles.notificationPanel}>
+        {notifications.map((n) => (
+          <div
+            key={n.id}
+            style={{
+              ...styles.notification,
+              ...styles[n.type],
+            }}
+          >
+            <span>{n.message}</span>
+            <button
+              style={styles.closeBtn}
+              onClick={() =>
+                setNotifications((prev) =>
+                  prev.filter((item) => item.id !== n.id)
+                )
+              }
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const styles = {
+  container: {
+    padding: "40px",
+    fontFamily: "Arial",
+  },
+  buttons: {
+    display: "flex",
+    gap: "10px",
+    marginBottom: "20px",
+  },
+  notificationPanel: {
+    position: "fixed",
+    top: "20px",
+    right: "20px",
+    width: "300px",
+  },
+  notification: {
+    padding: "12px",
+    borderRadius: "5px",
+    marginBottom: "10px",
+    color: "#fff",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    animation: "fadeIn 0.3s ease-in",
+  },
+  success: {
+    backgroundColor: "#4CAF50",
+  },
+  warning: {
+    backgroundColor: "#FF9800",
+  },
+  error: {
+    backgroundColor: "#F44336",
+  },
+  closeBtn: {
+    background: "transparent",
+    border: "none",
+    color: "#fff",
+    cursor: "pointer",
+    fontSize: "16px",
+  },
+};
+
+export default App;
