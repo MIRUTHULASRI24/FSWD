@@ -1,0 +1,116 @@
+import { useState } from "react";
+
+function App() {
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [feedbackList, setFeedbackList] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (rating === 0) {
+      alert("Please select a rating");
+      return;
+    }
+
+    if (comment.trim() === "") {
+      alert("Please enter a comment");
+      return;
+    }
+
+    const newFeedback = {
+      rating,
+      comment,
+      date: new Date().toLocaleString(),
+    };
+
+    setFeedbackList([newFeedback, ...feedbackList]);
+    setRating(0);
+    setComment("");
+  };
+
+  return (
+    <div style={styles.container}>
+      <h2>Student Feedback</h2>
+
+      {/* Feedback Form */}
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <label>Rate the Course:</label>
+
+        <div style={styles.stars}>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span
+              key={star}
+              style={{
+                ...styles.star,
+                color: star <= rating ? "#f5b301" : "#ccc",
+              }}
+              onClick={() => setRating(star)}
+            >
+              ★
+            </span>
+          ))}
+        </div>
+
+        <textarea
+          placeholder="Write your feedback here..."
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          rows="4"
+        />
+
+        <button type="submit">Submit Feedback</button>
+      </form>
+
+      {/* Feedback Display */}
+      <div style={styles.feedbackSection}>
+        <h3>Submitted Feedback</h3>
+
+        {feedbackList.length === 0 && <p>No feedback yet.</p>}
+
+        {feedbackList.map((item, index) => (
+          <div key={index} style={styles.feedbackCard}>
+            <p>
+              <strong>Rating:</strong>{" "}
+              {"★".repeat(item.rating)}
+            </p>
+            <p>{item.comment}</p>
+            <small>{item.date}</small>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const styles = {
+  container: {
+    width: "400px",
+    margin: "50px auto",
+    fontFamily: "Arial",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    marginBottom: "30px",
+  },
+  stars: {
+    fontSize: "24px",
+    cursor: "pointer",
+  },
+  star: {
+    marginRight: "5px",
+  },
+  feedbackSection: {
+    marginTop: "20px",
+  },
+  feedbackCard: {
+    border: "1px solid #ddd",
+    padding: "10px",
+    marginBottom: "10px",
+    borderRadius: "5px",
+  },
+};
+
+export default App;
