@@ -1,0 +1,152 @@
+import React, { useState } from "react";
+
+const styles = {
+  container: {
+    display: "flex",
+    height: "100vh",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+  },
+  sidebar: {
+    width: "220px",
+    backgroundColor: "#2c3e50",
+    color: "white",
+    display: "flex",
+    flexDirection: "column",
+    padding: "20px",
+  },
+  navItem: (active) => ({
+    padding: "12px 16px",
+    marginBottom: "10px",
+    cursor: "pointer",
+    backgroundColor: active ? "#34495e" : "transparent",
+    borderRadius: "4px",
+  }),
+  main: {
+    flexGrow: 1,
+    padding: "20px",
+    backgroundColor: "#ecf0f1",
+    overflowY: "auto",
+  },
+  header: {
+    fontSize: "1.8rem",
+    marginBottom: "20px",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    backgroundColor: "white",
+    borderRadius: "6px",
+    overflow: "hidden",
+  },
+  th: {
+    backgroundColor: "#2980b9",
+    color: "white",
+    padding: "12px",
+    textAlign: "left",
+  },
+  td: {
+    padding: "12px",
+    borderBottom: "1px solid #ddd",
+  },
+};
+
+const dummyStudents = [
+  { id: 1, name: "Alice Johnson", age: 18, course: "Mathematics" },
+  { id: 2, name: "Bob Smith", age: 20, course: "Physics" },
+  { id: 3, name: "Charlie Lee", age: 19, course: "Computer Science" },
+  { id: 4, name: "Diana Prince", age: 21, course: "History" },
+];
+
+export default function App() {
+  const [page, setPage] = useState("dashboard");
+
+  function renderContent() {
+    switch (page) {
+      case "dashboard":
+        return (
+          <>
+            <h2 style={styles.header}>Dashboard Overview</h2>
+            <p>Welcome to the Student Management Dashboard.</p>
+            <p>
+              Total Students: <strong>{dummyStudents.length}</strong>
+            </p>
+          </>
+        );
+
+      case "students":
+        return (
+          <>
+            <h2 style={styles.header}>Students List</h2>
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th style={styles.th}>ID</th>
+                  <th style={styles.th}>Name</th>
+                  <th style={styles.th}>Age</th>
+                  <th style={styles.th}>Course</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dummyStudents.map((student) => (
+                  <tr key={student.id}>
+                    <td style={styles.td}>{student.id}</td>
+                    <td style={styles.td}>{student.name}</td>
+                    <td style={styles.td}>{student.age}</td>
+                    <td style={styles.td}>{student.course}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        );
+
+      case "about":
+        return (
+          <>
+            <h2 style={styles.header}>About</h2>
+            <p>This is a simple student management dashboard demo built with React.</p>
+          </>
+        );
+
+      default:
+        return null;
+    }
+  }
+
+  return (
+    <div style={styles.container}>
+      <nav style={styles.sidebar}>
+        <h1 style={{ marginBottom: "30px" }}>StudentMgmt</h1>
+        <div
+          style={styles.navItem(page === "dashboard")}
+          onClick={() => setPage("dashboard")}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && setPage("dashboard")}
+        >
+          Dashboard
+        </div>
+        <div
+          style={styles.navItem(page === "students")}
+          onClick={() => setPage("students")}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && setPage("students")}
+        >
+          Students
+        </div>
+        <div
+          style={styles.navItem(page === "about")}
+          onClick={() => setPage("about")}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && setPage("about")}
+        >
+          About
+        </div>
+      </nav>
+
+      <main style={styles.main}>{renderContent()}</main>
+    </div>
+  );
+}
