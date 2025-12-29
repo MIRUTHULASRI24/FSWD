@@ -1,0 +1,84 @@
+import { useState } from "react";
+
+export default function App() {
+  const [tasks, setTasks] = useState([]);
+  const [taskInput, setTaskInput] = useState("");
+
+  const addTask = () => {
+    if (taskInput.trim() === "") return;
+
+    setTasks([...tasks, { id: Date.now(), text: taskInput }]);
+    setTaskInput("");
+  };
+
+  const removeTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  return (
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h2>📝 Task List Dashboard</h2>
+
+      {/* Input Section */}
+      <div style={{ marginBottom: "15px" }}>
+        <input
+          type="text"
+          placeholder="Enter a task"
+          value={taskInput}
+          onChange={(e) => setTaskInput(e.target.value)}
+          style={{ padding: "8px", width: "250px", marginRight: "10px" }}
+        />
+        <button
+          onClick={addTask}
+          style={{
+            padding: "8px 12px",
+            backgroundColor: "#4caf50",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          Add Task
+        </button>
+      </div>
+
+      {/* Task List */}
+      {tasks.length === 0 ? (
+        <p>No tasks added yet.</p>
+      ) : (
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {tasks.map((task) => (
+            <li
+              key={task.id}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "8px",
+                border: "1px solid #ccc",
+                marginBottom: "8px",
+                borderRadius: "4px",
+              }}
+            >
+              <span>{task.text}</span>
+              <button
+                onClick={() => removeTask(task.id)}
+                style={{
+                  backgroundColor: "#ff4d4d",
+                  color: "white",
+                  border: "none",
+                  padding: "6px 10px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                Remove
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
