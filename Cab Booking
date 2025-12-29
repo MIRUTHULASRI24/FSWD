@@ -1,0 +1,81 @@
+export default function App() {
+
+  function bookCab() {
+    alert("Welcome to Online Cab Booking Application!");
+
+    // Customer Name
+    let name = prompt("Enter Customer Name:");
+    if (name === null || name.trim() === "") {
+      alert("Booking cancelled. Name is required.");
+      return;
+    }
+
+    // Pickup Location
+    let pickup = prompt("Enter Pickup Location:");
+    if (pickup === null || pickup.trim() === "") {
+      alert("Booking cancelled. Pickup location is required.");
+      return;
+    }
+
+    // Drop Location
+    let drop = prompt("Enter Drop Location:");
+    if (drop === null || drop.trim() === "") {
+      alert("Booking cancelled. Drop location is required.");
+      return;
+    }
+
+    // Distance
+    let distance = prompt("Enter Distance (in km):");
+    if (distance === null || isNaN(distance) || distance <= 0) {
+      alert("Invalid distance.");
+      return;
+    }
+
+    // Fare calculation
+    let pricePerKm = 15;
+    let totalFare = distance * pricePerKm;
+
+    // Confirmation
+    let confirmBooking = confirm(
+      "Customer Name: " + name +
+      "\nPickup Location: " + pickup +
+      "\nDrop Location: " + drop +
+      "\nDistance: " + distance + " km" +
+      "\nTotal Fare: ₹" + totalFare +
+      "\n\nDo you want to confirm cab booking?"
+    );
+
+    if (confirmBooking) {
+      alert(
+        "🚕 Cab Booked Successfully!\n\n" +
+        "Customer: " + name +
+        "\nPickup: " + pickup +
+        "\nDrop: " + drop +
+        "\nDistance: " + distance + " km" +
+        "\nFare Paid: ₹" + totalFare +
+        "\n\nHave a safe journey!"
+      );
+    } else {
+      alert("Cab booking cancelled.");
+    }
+  }
+
+  return (
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h2>🚕 Online Cab Booking Application</h2>
+      <button
+        onClick={bookCab}
+        style={{
+          padding: "10px 15px",
+          backgroundColor: "#4caf50",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Book Cab
+      </button>
+    </div>
+  );
+}
