@@ -1,0 +1,161 @@
+import React, { useState, useEffect, useRef } from "react";
+
+const styles = {
+  container: {
+    display: "grid",
+    gridTemplateColumns: "2fr 1fr",
+    gap: "20px",
+    padding: "20px",
+    fontFamily: "'Arial', sans-serif",
+  },
+  post: {
+    backgroundColor: "white",
+    padding: "20px",
+    borderRadius: "6px",
+  },
+  comments: {
+    backgroundColor: "white",
+    padding: "20px",
+    borderRadius: "6px",
+  },
+  commentList: {
+    listStyle: "none",
+    padding: 0,
+  },
+  commentItem: {
+    backgroundColor: "#eee",
+    padding: "8px",
+    marginBottom: "8px",
+    borderRadius: "4px",
+  },
+  form: {
+    display: "flex",
+    gap: "8px",
+    marginTop: "10px",
+  },
+  input: {
+    flex: 1,
+    padding: "6px",
+  },
+  button: {
+    padding: "6px 12px",
+    cursor: "pointer",
+  },
+  header: {
+    backgroundColor: "#222",
+    color: "white",
+    padding: "1rem",
+    textAlign: "center",
+  },
+  responsiveGrid: {
+    gridTemplateColumns: "1fr",
+  },
+};
+
+export default function App() {
+  const [comments, setComments] = useState(() => {
+    const saved = localStorage.getItem("comments");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const channelRef = useRef(null);
+
+  // Setup BroadcastChannel for cross-tab communication
+  useEffect(() => {
+    channelRef.current = new BroadcastChannel("blog-comments");
+    channelRef.current.onmessage = (event) => {
+      setComments((prev) => [...prev, event.data]);
+    };
+
+    return () => {
+      channelRef.current.close();
+    };
+  }, []);
+
+  // Save comments to localStorage whenever comments change
+  useEffect(() => {
+    localStorage.setItem("comments", JSON.stringify(comments));
+  }, [comments]);
+
+  // Handle form submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!name.trim() || !message.trim()) return;
+
+    const newComment = { name: name.trim(), message: message.trim() };
+
+    setComments((prev) => [...prev, newComment]);
+
+    if (channelRef.current) {
+      channelRef.current.postMessage(newComment);
+    }
+
+    setName("");
+    setMessage("");
+  };
+
+  // Responsive check for grid columns on resize (optional)
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <>
+      <header style={styles.header}>
+        <h1>My Blog</h1>
+      </header>
+
+      <main
+        style={{
+          ...styles.container,
+          ...(isMobile ? styles.responsiveGrid : {}),
+        }}
+      >
+        <article style={styles.post}>
+          <h2>Responsive Blog Post</h2>
+          <p>
+            This blog uses React and BroadcastChannel API for real-time
+            comments. Open this page in multiple tabs to see live updates.
+          </p>
+        </article>
+
+        <section style={styles.comments}>
+          <h3>Comments</h3>
+          <ul style={styles.commentList}>
+            {comments.map((c, i) => (
+              <li key={i} style={styles.commentItem}>
+                <strong>{c.name}</strong>: {c.message}
+              </li>
+            ))}
+          </ul>
+
+          <form style={styles.form} onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Name"
+              style={styles.input}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Comment"
+              style={styles.input}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+            />
+            <button type="submit" style={styles.button}>
+              Post
+            </button>
+          </form>
+        </section>
+      </main>
+    </>
+  );
+}
