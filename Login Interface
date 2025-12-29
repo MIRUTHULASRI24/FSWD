@@ -1,0 +1,97 @@
+import { useState } from "react";
+
+function App() {
+  const [role, setRole] = useState(null);
+  const [username, setUsername] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    if (!selectedRole) {
+      alert("Please select a role");
+      return;
+    }
+
+    setRole(selectedRole);
+  };
+
+  const handleLogout = () => {
+    setRole(null);
+    setUsername("");
+    setSelectedRole("");
+  };
+
+  // ---------- LOGIN SCREEN ----------
+  if (!role) {
+    return (
+      <div style={styles.container}>
+        <h2>Login</h2>
+
+        <form onSubmit={handleLogin} style={styles.form}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+
+          <select
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            required
+          >
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="student">Student</option>
+          </select>
+
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    );
+  }
+
+  // ---------- ADMIN DASHBOARD ----------
+  if (role === "admin") {
+    return (
+      <div style={styles.dashboard}>
+        <h1>Admin Dashboard</h1>
+        <p>Welcome, {username}</p>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+    );
+  }
+
+  // ---------- STUDENT DASHBOARD ----------
+  if (role === "student") {
+    return (
+      <div style={styles.dashboard}>
+        <h1>Student Dashboard</h1>
+        <p>Welcome, {username}</p>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+    );
+  }
+}
+
+const styles = {
+  container: {
+    marginTop: "100px",
+    textAlign: "center",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    width: "250px",
+    margin: "auto",
+    gap: "10px",
+  },
+  dashboard: {
+    marginTop: "80px",
+    textAlign: "center",
+  },
+};
+
+export default App;
