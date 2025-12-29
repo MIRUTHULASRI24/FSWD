@@ -1,0 +1,115 @@
+import { useState } from "react";
+
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [role, setRole] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
+
+  // Dummy credentials (simulation)
+  const users = {
+    admin: { username: "admin", password: "admin123" },
+    student: { username: "student", password: "student123" },
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    if (!selectedRole) {
+      alert("Please select a role");
+      return;
+    }
+
+    const user = users[selectedRole];
+
+    if (username !== user.username || password !== user.password) {
+      alert("Invalid username or password");
+      return;
+    }
+
+    setRole(selectedRole);
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setRole("");
+    setUsername("");
+    setPassword("");
+    setSelectedRole("");
+  };
+
+  // -------- LOGIN SCREEN --------
+  if (!isAuthenticated) {
+    return (
+      <div style={styles.container}>
+        <h2>Login</h2>
+
+        <form onSubmit={handleLogin} style={styles.form}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <select
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            required
+          >
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="student">Student</option>
+          </select>
+
+          <button type="submit">Login</button>
+        </form>
+
+        <p style={{ marginTop: "10px", fontSize: "14px" }}>
+          Admin → admin / admin123 <br />
+          Student → student / student123
+        </p>
+      </div>
+    );
+  }
+
+  // -------- DASHBOARD --------
+  return (
+    <div style={styles.dashboard}>
+      <h1>{role === "admin" ? "Admin Dashboard" : "Student Dashboard"}</h1>
+      <p>Welcome, {username}</p>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
+  );
+}
+
+const styles = {
+  container: {
+    marginTop: "100px",
+    textAlign: "center",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    width: "260px",
+    margin: "auto",
+    gap: "10px",
+  },
+  dashboard: {
+    marginTop: "80px",
+    textAlign: "center",
+  },
+};
+
+export default App;
