@@ -1,0 +1,75 @@
+import { useState } from "react";
+
+export default function App() {
+  const [students, setStudents] = useState([
+    { id: 1, name: "Rahul", present: false },
+    { id: 2, name: "Anjali", present: false },
+    { id: 3, name: "Aman", present: false },
+    { id: 4, name: "Sneha", present: false },
+  ]);
+
+  const toggleAttendance = (id) => {
+    setStudents(
+      students.map((student) =>
+        student.id === id
+          ? { ...student, present: !student.present }
+          : student
+      )
+    );
+  };
+
+  return (
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h2>📋 Attendance Tracker</h2>
+
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          marginTop: "10px",
+        }}
+        border="1"
+      >
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {students.map((student) => (
+            <tr key={student.id}>
+              <td style={{ textAlign: "center" }}>{student.name}</td>
+              <td
+                style={{
+                  textAlign: "center",
+                  color: student.present ? "green" : "red",
+                  fontWeight: "bold",
+                }}
+              >
+                {student.present ? "Present" : "Absent"}
+              </td>
+              <td style={{ textAlign: "center" }}>
+                <button
+                  onClick={() => toggleAttendance(student.id)}
+                  style={{
+                    padding: "6px 12px",
+                    backgroundColor: student.present ? "#ff4d4d" : "#4caf50",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  {student.present ? "Mark Absent" : "Mark Present"}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
