@@ -1,0 +1,96 @@
+import { useState } from "react";
+
+export default function App() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [event, setEvent] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!name.trim() || !email.trim() || !event.trim()) {
+      alert("Please fill all the fields.");
+      return;
+    }
+
+    // Confirmation alert
+    const confirmRegistration = window.confirm(
+      `Confirm registration?\n\nName: ${name}\nEmail: ${email}\nEvent: ${event}`
+    );
+
+    if (confirmRegistration) {
+      alert(`🎉 Registration Successful!\n\nThank you, ${name}, for registering for the event: ${event}`);
+      
+      // Reset form
+      setName("");
+      setEmail("");
+      setEvent("");
+    } else {
+      alert("Registration cancelled.");
+    }
+  };
+
+  return (
+    <div style={{ maxWidth: 400, margin: "20px auto", fontFamily: "Arial" }}>
+      <h2>Event Registration</h2>
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: 12 }}>
+          <label>
+            Name:<br />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              style={{ width: "100%", padding: 8 }}
+              placeholder="Your name"
+            />
+          </label>
+        </div>
+
+        <div style={{ marginBottom: 12 }}>
+          <label>
+            Email:<br />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ width: "100%", padding: 8 }}
+              placeholder="your.email@example.com"
+            />
+          </label>
+        </div>
+
+        <div style={{ marginBottom: 12 }}>
+          <label>
+            Select Event:<br />
+            <select
+              value={event}
+              onChange={(e) => setEvent(e.target.value)}
+              style={{ width: "100%", padding: 8 }}
+            >
+              <option value="">-- Choose an event --</option>
+              <option value="React Workshop">React Workshop</option>
+              <option value="JavaScript Bootcamp">JavaScript Bootcamp</option>
+              <option value="CSS Design Session">CSS Design Session</option>
+            </select>
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            padding: "10px 15px",
+            backgroundColor: "#4caf50",
+            color: "white",
+            border: "none",
+            borderRadius: 5,
+            cursor: "pointer",
+            width: "100%",
+          }}
+        >
+          Register
+        </button>
+      </form>
+    </div>
+  );
+}
